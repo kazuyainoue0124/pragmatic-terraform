@@ -50,3 +50,11 @@ resource "aws=route_table_association" "private" {
   subnet_id = aws_subnet.private.id
   route_table_id = aws_route_table.private.id
 }
+
+resource "aws_eip" "nate_gateway" {
+  # 書籍では以下の書き方だが現在は非推奨
+  # vpc = true
+  # 以下の書き方が推奨
+  domain = "vpc"
+  depends_on = [aws_internet_gateway.example]
+}
