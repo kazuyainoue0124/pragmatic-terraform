@@ -70,7 +70,7 @@ resource "aws=route_table_association" "private" {
   route_table_id = aws_route_table.private.id
 }
 
-resource "aws_eip" "nat_gateway" {
+resource "aws_eip" "nat_gateway_0" {
   # 書籍では以下の書き方だが現在は非推奨
   # vpc = true
   # 以下の書き方が推奨
@@ -78,9 +78,20 @@ resource "aws_eip" "nat_gateway" {
   depends_on = [aws_internet_gateway.example]
 }
 
-resource "aws_nat_gateway" "example" {
-  allocation_id = aws_eip.nat_gateway.id
-  subnet_id = aws_subnet.public.id
+resource "aws_eip" "nat_gateway_1" {
+  domain = "vpc"
+  depends_on = [aws_internet_gateway.example]
+}
+
+resource "aws_nat_gateway" "nat_gateway_0" {
+  allocation_id = aws_eip.nat_gateway_0.id
+  subnet_id = aws_subnet.public_0.id
+  depends_on = [aws_internet_gateway.example]
+}
+
+resource "aws_nat_gateway" "nat_gateway_1" {
+  allocation_id = aws_eip.nat_gateway_1.id
+  subnet_id = aws_subnet.public_1.id
   depends_on = [aws_internet_gateway.example]
 }
 
