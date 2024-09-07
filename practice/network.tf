@@ -116,3 +116,8 @@ resource "aws_route" "private_1" {
   nat_gateway_id = aws_nat_gateway.nat_gateway_1.id
   destination_cidr_block = "0.0.0.0/0"
 }
+
+resource "aws_security_group" "example" {
+  name = "example"
+  vpc_id = aws_vpc.example.id
+}
