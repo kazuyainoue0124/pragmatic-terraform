@@ -66,3 +66,7 @@ resource "aws_lb_listener" "http" {
 output "alb_dns_name" {
   value = aws_lb.example.dns_name
 }
+
+data "aws_route53_zone" "example" {
+  name = "pragmatic-terraform.com."
+}
