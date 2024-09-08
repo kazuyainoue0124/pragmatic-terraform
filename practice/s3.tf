@@ -41,7 +41,27 @@ resource "aws_s3_bucket" "public" {
   bucket = "inoue-public-pragmatic-terraform"
 }
 
+resource "aws_s3_bucket_ownership_controls" "public" {
+  bucket = aws_s3_bucket.public.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "public" {
+  bucket = aws_s3_bucket.public.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
 resource "aws_s3_bucket_acl" "public" {
+  depends_on = [
+    aws_s3_bucket_public_access_block.public,
+    aws_s3_bucket_ownership_controls.public,
+  ]
   bucket = aws_s3_bucket.public.id
   acl    = "public-read"
 }
@@ -59,6 +79,8 @@ resource "aws_s3_bucket_cors_configuration" "public" {
 
 resource "aws_s3_bucket" "alb_log" {
   bucket = "inoue-alb-log-pragmatic-terraform"
+  # この1行がないとバケットにログが残っている場合に削除ができない
+  force_destroy = true
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "alb_log" {
@@ -87,7 +109,6 @@ data "aws_iam_policy_document" "alb_log" {
 
     principals {
       type = "AWS"
-      # AWS アカウント ID（書籍どおりの番号なので実際とは異なる）
       identifiers = ["582318560864"]
     }
   }
