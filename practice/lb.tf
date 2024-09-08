@@ -81,6 +81,22 @@ resource "aws_lb_listener" "https" {
   }
 }
 
+resource "aws_lb_listener" "redirect_http_to_https" {
+  load_balancer_arn = aws_lb.example.arn
+  port = "8080"
+  protocol = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port = "443"
+      protocol = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
 data "aws_route53_zone" "example" {
   name = "pragmatic-terraform.com."
 }
@@ -107,17 +123,27 @@ resource "aws_acm_certificate" "example" {
   }
 }
 
+# 書籍の書き方だとエラーが出るため以下のドキュメントを参考に修正
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acm_certificate#referencing-domain_validation_options-with-for_each-based-resources
 resource "aws_route53_record" "example_certificate" {
-  name = aws_acm_certificate.example.domain_validation_options[0].resource_record_name
-  type = aws_acm_certificate.example.domain_validation_options[0].resource_record_type
-  records = [aws_acm_certificate.example.domain_validation_options[0].resource_record_value]
-  zone_id = data.aws_route53_zone.example.id
+  for_each = {
+    for dvo in aws_acm_certificate.example.domain_validation_options : dvo.domain_name => {
+      name = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type = dvo.resource_record_type
+    }
+  }
+
+  name = each.value.name
+  type = each.value.type
+  records = [each.value.record]
+  zone_id = data.aws_route53_zone.example.zone_id
   ttl = 60
 }
 
 resource "aws_acm_certificate_validation" "example" {
   certificate_arn = aws_acm_certificate.example.arn
-  validation_record_fqdns = [aws_route53_record.example_certificate.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.example_certificate : record.fqdn]
 }
 
 output "alb_dns_name" {
