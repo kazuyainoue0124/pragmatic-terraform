@@ -3,6 +3,7 @@ resource "aws_lb" "example" {
   load_balancer_type = "application"
   internal = false
   idle_timeout = 60
+  # 本来は true にすべきだが、費用負担を避けるために false にしている
   enable_deletion_protection = false
 
   subnets = [
