@@ -1,7 +1,7 @@
 # バケット名は全世界で一意でなければならない
 # TODO: このままだとエラーになるため、 apply の実行前に別のバケット名へ変更する
 resource "aws_s3_bucket" "private" {
-  bucket = "private-pragmatic-terraform"
+  bucket = "inoue-private-pragmatic-terraform"
 }
 
 # バージョニングを有効にする
@@ -38,7 +38,7 @@ resource "aws_s3_bucket_public_access_block" "private" {
 }
 
 resource "aws_s3_bucket" "public" {
-  bucket = "public-pragmatic-terraform"
+  bucket = "inoue-public-pragmatic-terraform"
 }
 
 resource "aws_s3_bucket_acl" "public" {
@@ -58,7 +58,7 @@ resource "aws_s3_bucket_cors_configuration" "public" {
 }
 
 resource "aws_s3_bucket" "alb_log" {
-  bucket = "alb-log-pragmatic-terraform"
+  bucket = "inoue-alb-log-pragmatic-terraform"
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "alb_log" {
