@@ -49,7 +49,7 @@ module "http_redirect_sg" {
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.example.arn
   port = "80"
-  protocol = "http"
+  protocol = "HTTP"
 
   default_action {
     type = "fixed-response"
