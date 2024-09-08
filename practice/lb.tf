@@ -63,10 +63,6 @@ resource "aws_lb_listener" "http" {
   }
 }
 
-output "alb_dns_name" {
-  value = aws_lb.example.dns_name
-}
-
 data "aws_route53_zone" "example" {
   name = "pragmatic-terraform.com."
 }
@@ -81,6 +77,10 @@ resource "aws_route53_record" "example" {
     zone_id = aws_lb.example.zone_id
     evaluate_target_health = true
   }
+}
+
+output "alb_dns_name" {
+  value = aws_lb.example.dns_name
 }
 
 output "domain_name" {
