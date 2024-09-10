@@ -70,6 +70,8 @@ resource "aws_lb_listener" "https" {
   certificate_arn = aws_acm_certificate.example.arn
   ssl_policy = "ELBSecurityPolicy-2016-08"
 
+  depends_on = [aws_acm_certificate_validation.example]
+
   default_action {
     type = "fixed-response"
 
