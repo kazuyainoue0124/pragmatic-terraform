@@ -40,7 +40,7 @@ resource "aws_codepipeline" "example" {
       category = "Source"
       owner = "ThirdParty"
       provider = "GitHub"
-      version = 1
+      version = 2
       output_artifacts = ["Source"]
 
       configuration = {
@@ -120,7 +120,7 @@ resource "aws_codepipeline_webhook" "example" {
 }
 
 provider "github" {
-  organization = "kazuyainoue0124"
+  owner = "kazuyainoue0124"
 }
 
 resource "github_repository_webhook" "example" {
