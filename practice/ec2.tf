@@ -23,3 +23,10 @@ data "aws_iam_policy_document" "ec2_for_ssm" {
 data "aws_iam_policy" "ec2_for_ssm" {
   arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
+
+module "ec2_for_ssm_role" {
+  source = "./iam_role"
+  name = "ec2_for_ssm"
+  identifier = "ec2.amazonaws.com"
+  policy = data.aws_iam_policy_document.ec2_for_ssm.json
+}
