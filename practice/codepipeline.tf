@@ -122,3 +122,16 @@ resource "aws_codepipeline_webhook" "example" {
 provider "github" {
   organization = "kazuyainoue0124"
 }
+
+resource "github_repository_webhook" "example" {
+  repository = "pragmatic-terraform"
+
+  configuration {
+    url = aws_codepipeline_webhook.example.url
+    secret = random_id.example.hex
+    content_type = "json"
+    insecure_ssl = false
+  }
+
+  events = ["push"]
+}
