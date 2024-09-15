@@ -113,3 +113,22 @@ data "aws_iam_policy_document" "alb_log" {
     }
   }
 }
+
+resource "aws_s3_bucket" "artifact" {
+  bucket = "inoue-artifact-pragmatic-terraform"
+  # この1行がないとバケットにログが残っている場合に削除ができない
+  force_destroy = true
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "artifact" {
+  bucket = aws_s3_bucket.artifact.id
+
+  rule {
+    id     = "artifact_expiration"
+    status = "Enabled"
+
+    expiration {
+      days = "180"
+    }
+  }
+}
