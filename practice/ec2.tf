@@ -30,3 +30,8 @@ module "ec2_for_ssm_role" {
   identifier = "ec2.amazonaws.com"
   policy = data.aws_iam_policy_document.ec2_for_ssm.json
 }
+
+resource "aws_iam_instance_profile" "ec2_for_ssm" {
+  name = "ec2_for_ssm"
+  role = module.ec2_for_ssm_role.iam_role_name
+}
