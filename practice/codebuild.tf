@@ -35,7 +35,7 @@ module "codebuild_role" {
 
 resource "aws_codebuild_project" "example" {
   name = "example"
-  service_role = "module.codebuild_role.iam_role_arn"
+  service_role = module.codebuild_role.iam_role_arn
 
   source {
     type = "CODEPIPELINE"
