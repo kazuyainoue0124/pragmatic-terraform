@@ -44,6 +44,11 @@ resource "aws_instance" "example_for_operation" {
   user_data = file("./user_data.sh")
 }
 
+resource "aws_cloudwatch_log_group" "operation" {
+  name = "/operation"
+  retention_in_days = 180
+}
+
 output "operation_instance_id" {
   value = aws_instance.example_for_operation.id
 }
