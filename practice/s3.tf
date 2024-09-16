@@ -132,3 +132,21 @@ resource "aws_s3_bucket_lifecycle_configuration" "artifact" {
     }
   }
 }
+
+resource "aws_s3_bucket" "operation" {
+  bucket = "inoue-operation-pragmatic-terraform"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "operation" {
+  bucket = aws_s3_bucket.operation.id
+
+  rule {
+    id     = "operation_expiration"
+    status = "Enabled"
+
+    expiration {
+      days = 180
+    }
+  }
+}
