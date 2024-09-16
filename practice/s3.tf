@@ -103,12 +103,12 @@ resource "aws_s3_bucket_policy" "alb_log" {
 
 data "aws_iam_policy_document" "alb_log" {
   statement {
-    effect = "Allow"
-    actions = ["s3:PutObject"]
+    effect    = "Allow"
+    actions   = ["s3:PutObject"]
     resources = ["arn:aws:s3:::${aws_s3_bucket.alb_log.id}/*"]
 
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = ["582318560864"]
     }
   }
@@ -134,7 +134,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "artifact" {
 }
 
 resource "aws_s3_bucket" "operation" {
-  bucket = "inoue-operation-pragmatic-terraform"
+  bucket        = "inoue-operation-pragmatic-terraform"
   force_destroy = true
 }
 
@@ -152,7 +152,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "operation" {
 }
 
 resource "aws_s3_bucket" "cloudwatch_logs" {
-  bucket = "inoue-cloudwatch-logs-pragmatic-terraform"
+  bucket        = "inoue-cloudwatch-logs-pragmatic-terraform"
   force_destroy = true
 }
 
@@ -160,7 +160,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "cloudwatch_logs" {
   bucket = aws_s3_bucket.cloudwatch_logs.id
 
   rule {
-    id = "cloudwatch_logs_expiration"
+    id     = "cloudwatch_logs_expiration"
     status = "Enabled"
 
     expiration {

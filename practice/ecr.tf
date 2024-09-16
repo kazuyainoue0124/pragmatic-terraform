@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "example" {
-  name = "example"
+  name         = "example"
   force_delete = true
 }
 

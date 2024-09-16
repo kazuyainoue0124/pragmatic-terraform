@@ -1,6 +1,6 @@
 data "aws_iam_policy_document" "codebuild" {
   statement {
-    effect = "Allow"
+    effect    = "Allow"
     resources = ["*"]
 
     actions = [
@@ -27,14 +27,14 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 module "codebuild_role" {
-  source = "./iam_role"
-  name = "codebuild"
+  source     = "./iam_role"
+  name       = "codebuild"
   identifier = "codebuild.amazonaws.com"
-  policy = data.aws_iam_policy_document.codebuild.json
+  policy     = data.aws_iam_policy_document.codebuild.json
 }
 
 resource "aws_codebuild_project" "example" {
-  name = "example"
+  name         = "example"
   service_role = module.codebuild_role.iam_role_arn
 
   source {
@@ -46,9 +46,9 @@ resource "aws_codebuild_project" "example" {
   }
 
   environment {
-    type = "LINUX_CONTAINER"
-    compute_type = "BUILD_GENERAL1_SMALL"
-    image = "aws/codebuild/standard:2.0"
+    type            = "LINUX_CONTAINER"
+    compute_type    = "BUILD_GENERAL1_SMALL"
+    image           = "aws/codebuild/standard:2.0"
     privileged_mode = true
   }
 }

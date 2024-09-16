@@ -19,48 +19,48 @@ data "aws_iam_policy_document" "kinesis_data_firehose" {
 }
 
 module "kinesis_data_firehose_role" {
-  source = "./iam_role"
-  name = "kinesis-data-firehose"
+  source     = "./iam_role"
+  name       = "kinesis-data-firehose"
   identifier = "firehose.amazonaws.com"
-  policy = data.aws_iam_policy_document.kinesis_data_firehose.json
+  policy     = data.aws_iam_policy_document.kinesis_data_firehose.json
 }
 
 resource "aws_kinesis_firehose_delivery_stream" "example" {
-  name = "example"
+  name        = "example"
   destination = "extended_s3"
 
   extended_s3_configuration {
-    role_arn = module.kinesis_data_firehose_role.iam_role_arn
+    role_arn   = module.kinesis_data_firehose_role.iam_role_arn
     bucket_arn = aws_s3_bucket.cloudwatch_logs.arn
-    prefix = "ecs-scheduled-tasks/example/"
+    prefix     = "ecs-scheduled-tasks/example/"
   }
 }
 
 data "aws_iam_policy_document" "cloudwatch_logs" {
   statement {
-    effect = "Allow"
-    actions = ["firehose:*"]
+    effect    = "Allow"
+    actions   = ["firehose:*"]
     resources = ["arn:aws:firehose:ap-northeast-1:*:*"]
   }
 
   statement {
-    effect = "Allow"
-    actions = ["iam:PassRole"]
+    effect    = "Allow"
+    actions   = ["iam:PassRole"]
     resources = ["arn:aws:iam::*:role/cloudwatch-logs"]
   }
 }
 
 module "cloudwatch_logs_role" {
-  source = "./iam_role"
-  name = "cloudwatch-logs"
+  source     = "./iam_role"
+  name       = "cloudwatch-logs"
   identifier = "logs.ap-northeast-1.amazonaws.com"
-  policy = data.aws_iam_policy_document.cloudwatch_logs.json
+  policy     = data.aws_iam_policy_document.cloudwatch_logs.json
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "example" {
-  name = "example"
-  log_group_name = aws_cloudwatch_log_group.for_ecs_scheduled_tasks.name
+  name            = "example"
+  log_group_name  = aws_cloudwatch_log_group.for_ecs_scheduled_tasks.name
   destination_arn = aws_kinesis_firehose_delivery_stream.example.arn
-  filter_pattern = "[]"
-  role_arn = module.cloudwatch_logs_role.iam_role_arn
+  filter_pattern  = "[]"
+  role_arn        = module.cloudwatch_logs_role.iam_role_arn
 }
