@@ -38,16 +38,15 @@ resource "aws_codepipeline" "example" {
     action {
       name = "Source"
       category = "Source"
-      owner = "ThirdParty"
-      provider = "GitHub"
-      version = 2
+      owner = "AWS"
+      provider = "CodeStarSourceConnection"
+      version = 1
       output_artifacts = ["Source"]
 
       configuration = {
-        Owner  = "kazuyainoue0124"
-        Repo = "pragmatic-terraform"
-        Branch = "main"
-        PollForSourceChanges = false
+        ConnectionArn = aws_codestarconnections_connection.example.arn
+        FullRepositoryId = "kazuyainoue0124/pragmatic-terraform"
+        BranchName = "main"
       }
     }
   }
@@ -93,6 +92,11 @@ resource "aws_codepipeline" "example" {
     location = aws_s3_bucket.artifact.id
     type = "S3"
   }
+}
+
+resource "aws_codestarconnections_connection" "example" {
+  name          = "example-connection"
+  provider_type = "GitHub"
 }
 
 resource "random_id" "example" {
